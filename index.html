@@ -9,6 +9,7 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       padding: 20px;
       background: #f0f2f5;
+      color: #000; /* Todo o texto preto */
     }
     input, textarea {
       width: 100%;
@@ -25,6 +26,7 @@
       margin: 30px auto;
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      color: #000; /* Garante preto no PDF */
     }
     .btn {
       padding: 10px 20px;
@@ -42,8 +44,12 @@
       text-align: center;
       color: #333;
     }
-    h2, h3 {
-      color: #007bff;
+    h2 {
+      text-align: center;
+      color: #000;
+    }
+    h3 {
+      color: #000;
       border-bottom: 1px solid #ddd;
       padding-bottom: 3px;
       margin-bottom: 8px;
@@ -108,10 +114,10 @@
   <label>Habilidades pessoais (soft skills):</label>
   <input type="text" id="softskills" placeholder="Ex: Comunicação, Liderança, Trabalho em equipe" />
 
-  <button class="btn" onclick="gerarCurriculo()">Gerar Currículo</button>
+  <button class="btn" onclick="gerarCurriculo()">Gerar Currículo (PDF)</button>
 
   <div id="curriculo" style="display:none;">
-    <h2 id="c_nome" style="text-align:center;"></h2>
+    <h2 id="c_nome"></h2>
     <p style="text-align:center;">
       <strong>Email:</strong> <span id="c_email"></span> |
       <strong>Telefone:</strong> <span id="c_telefone"></span>
@@ -161,6 +167,7 @@
     }
 
     function gerarCurriculo() {
+      // Preencher dados
       document.getElementById('c_nome').innerText = document.getElementById('nome').value;
       document.getElementById('c_email').innerText = document.getElementById('email').value;
       document.getElementById('c_telefone').innerText = document.getElementById('telefone').value;
@@ -172,6 +179,7 @@
       document.getElementById('c_hardskills').innerText = document.getElementById('hardskills').value;
       document.getElementById('c_softskills').innerText = document.getElementById('softskills').value;
 
+      // Preencher experiências
       const empresas = document.getElementsByClassName('exp_empresa');
       const cargos = document.getElementsByClassName('exp_cargo');
       const periodos = document.getElementsByClassName('exp_periodo');
@@ -184,16 +192,20 @@
       }
       document.getElementById('c_experiencia').innerHTML = expHTML;
 
-      document.getElementById('curriculo').style.display = 'block';
+      // Mostrar currículo temporariamente
+      const curriculoDiv = document.getElementById('curriculo');
+      curriculoDiv.style.display = 'block';
 
-      const element = document.getElementById('curriculo');
+      // Gerar PDF
       html2pdf().set({
         margin: 10,
         filename: 'curriculo.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      }).from(element).save();
+      }).from(curriculoDiv).save().then(() => {
+        curriculoDiv.style.display = 'none'; // Ocultar novamente
+      });
     }
   </script>
 </body>
