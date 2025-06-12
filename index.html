@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gerador de Currículo Completo</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input, textarea { width: 100%; margin-bottom: 10px; padding: 8px; }
+    #curriculo { border: 1px solid #ccc; padding: 20px; margin-top: 20px; background: #f9f9f9; }
+    .btn { padding: 10px 20px; background: #4CAF50; color: #fff; border: none; cursor: pointer; }
+    h1, h2, h3 { color: #333; }
+  </style>
+</head>
+<body>
+  <h1>Gerador de Currículo Completo</h1>
+
+  <label>Nome completo:</label>
+  <input type="text" id="nome" />
+
+  <label>Email:</label>
+  <input type="email" id="email" />
+
+  <label>Telefone:</label>
+  <input type="text" id="telefone" />
+
+  <label>Endereço:</label>
+  <input type="text" id="endereco" />
+
+  <label>LinkedIn:</label>
+  <input type="text" id="linkedin" placeholder="https://linkedin.com/in/seu-perfil" />
+
+  <label>GitHub / Site / Portfólio:</label>
+  <input type="text" id="github" placeholder="https://github.com/seu-usuario" />
+
+  <label>Objetivo profissional:</label>
+  <textarea id="objetivo" rows="2"></textarea>
+
+  <label>Resumo profissional:</label>
+  <textarea id="resumo" rows="3"></textarea>
+
+  <label>Experiência (empresa - cargo - período - descrição):</label>
+  <textarea id="experiencia" rows="4"></textarea>
+
+  <label>Formação acadêmica (curso - instituição - período):</label>
+  <textarea id="formacao" rows="3"></textarea>
+
+  <label>Idiomas:</label>
+  <input type="text" id="idiomas" placeholder="Ex: Português (nativo), Inglês (avançado)" />
+
+  <label>Habilidades técnicas (hard skills):</label>
+  <input type="text" id="hardskills" placeholder="Ex: Excel avançado, Python, Photoshop" />
+
+  <label>Habilidades pessoais (soft skills):</label>
+  <input type="text" id="softskills" placeholder="Ex: Comunicação, Liderança, Trabalho em equipe" />
+
+  <button class="btn" onclick="gerarCurriculo()">Gerar Currículo</button>
+
+  <div id="curriculo" style="display:none;">
+    <h2 id="c_nome"></h2>
+    <p><strong>Email:</strong> <span id="c_email"></span></p>
+    <p><strong>Telefone:</strong> <span id="c_telefone"></span></p>
+    <p><strong>Endereço:</strong> <span id="c_endereco"></span></p>
+    <p><strong>LinkedIn:</strong> <span id="c_linkedin"></span></p>
+    <p><strong>GitHub / Site:</strong> <span id="c_github"></span></p>
+
+    <h3>Objetivo</h3>
+    <p id="c_objetivo"></p>
+
+    <h3>Resumo profissional</h3>
+    <p id="c_resumo"></p>
+
+    <h3>Experiência</h3>
+    <p id="c_experiencia"></p>
+
+    <h3>Formação acadêmica</h3>
+    <p id="c_formacao"></p>
+
+    <h3>Idiomas</h3>
+    <p id="c_idiomas"></p>
+
+    <h3>Habilidades técnicas</h3>
+    <p id="c_hardskills"></p>
+
+    <h3>Habilidades pessoais</h3>
+    <p id="c_softskills"></p>
+  </div>
+
+  <script>
+    function gerarCurriculo() {
+      document.getElementById('c_nome').innerText = document.getElementById('nome').value;
+      document.getElementById('c_email').innerText = document.getElementById('email').value;
+      document.getElementById('c_telefone').innerText = document.getElementById('telefone').value;
+      document.getElementById('c_endereco').innerText = document.getElementById('endereco').value;
+      document.getElementById('c_linkedin').innerText = document.getElementById('linkedin').value;
+      document.getElementById('c_github').innerText = document.getElementById('github').value;
+      document.getElementById('c_objetivo').innerText = document.getElementById('objetivo').value;
+      document.getElementById('c_resumo').innerText = document.getElementById('resumo').value;
+      document.getElementById('c_experiencia').innerText = document.getElementById('experiencia').value;
+      document.getElementById('c_formacao').innerText = document.getElementById('formacao').value;
+      document.getElementById('c_idiomas').innerText = document.getElementById('idiomas').value;
+      document.getElementById('c_hardskills').innerText = document.getElementById('hardskills').value;
+      document.getElementById('c_softskills').innerText = document.getElementById('softskills').value;
+
+      document.getElementById('curriculo').style.display = 'block';
+
+      var element = document.getElementById('curriculo');
+      html2pdf().from(element).save('curriculo.pdf');
+    }
+  </script>
+</body>
+</html>
