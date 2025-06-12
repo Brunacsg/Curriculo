@@ -8,47 +8,68 @@
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
-      background: #f5f5f5;
+      background: #f2f2f2;
     }
+
     .container {
       background: #fff;
       padding: 20px;
-      border-radius: 5px;
+      border-radius: 6px;
       max-width: 800px;
       margin: auto;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
+
     input, textarea {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       margin: 6px 0 12px;
       border: 1px solid #ccc;
       border-radius: 4px;
+      font-size: 14px;
+      resize: vertical;
+      overflow-y: auto;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
+
+    textarea {
+      min-height: 60px;
+    }
+
     label {
       font-weight: bold;
     }
+
     button {
       padding: 10px 15px;
       background: #007bff;
-      color: #fff;
+      color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      margin: 5px 0;
+      margin: 8px 0;
     }
+
     button:hover {
       background: #0056b3;
     }
+
     #curriculo {
-      padding: 20px;
+      padding: 10px;
+      max-width: 800px;
+      font-size: 12px;
       color: #000;
       word-wrap: break-word;
       overflow-wrap: break-word;
       white-space: pre-wrap;
+      line-height: 1.6;
     }
+
     hr {
-      margin: 15px 0;
+      margin: 12px 0;
+      border: 0;
+      border-top: 1px solid #ccc;
     }
   </style>
 </head>
@@ -56,31 +77,31 @@
   <div class="container">
     <h2>Gerador de Currículo</h2>
     <label>Nome</label>
-    <input type="text" id="nome" maxlength="100">
-    
+    <input type="text" id="nome" maxlength="100" placeholder="Seu nome completo">
+
     <label>Email</label>
-    <input type="text" id="email" maxlength="100">
-    
+    <input type="email" id="email" maxlength="100" placeholder="email@exemplo.com">
+
     <label>Telefone</label>
-    <input type="text" id="telefone" maxlength="30">
-    
+    <input type="text" id="telefone" maxlength="30" placeholder="(DDD) 99999-9999">
+
     <label>Endereço</label>
-    <input type="text" id="endereco" maxlength="150">
-    
+    <input type="text" id="endereco" maxlength="150" placeholder="Rua, número, bairro, cidade - UF">
+
     <label>Objetivo</label>
-    <textarea id="objetivo" maxlength="200"></textarea>
-    
+    <textarea id="objetivo" maxlength="200" placeholder="Descreva seu objetivo profissional"></textarea>
+
     <label>Resumo Profissional</label>
-    <textarea id="resumo" maxlength="300"></textarea>
-    
+    <textarea id="resumo" maxlength="300" placeholder="Fale brevemente sobre sua trajetória, pontos fortes e áreas de interesse"></textarea>
+
     <div id="experiencias">
       <h4>Experiência Profissional</h4>
     </div>
     <button onclick="adicionarExperiencia()">Adicionar Experiência</button>
-    
-    <h4>Formação Acadêmica</h4>
-    <textarea id="formacao" maxlength="300"></textarea>
-    
+
+    <h4 style="margin-top: 20px;">Formação Acadêmica</h4>
+    <textarea id="formacao" maxlength="300" placeholder="Ex: Ensino Superior em Administração - Universidade X - 2020"></textarea>
+
     <button onclick="gerarCurriculo()">Gerar Currículo em PDF</button>
   </div>
 
@@ -98,13 +119,16 @@
       const div = document.createElement('div');
       div.innerHTML = `
         <label>Cargo</label>
-        <input type="text" maxlength="100" class="cargo">
+        <input type="text" maxlength="100" class="cargo" placeholder="Ex: Analista de Marketing">
+
         <label>Empresa</label>
-        <input type="text" maxlength="100" class="empresa">
+        <input type="text" maxlength="100" class="empresa" placeholder="Nome da empresa">
+
         <label>Duração</label>
-        <input type="text" maxlength="50" class="duracao">
+        <input type="text" maxlength="50" class="duracao" placeholder="Ex: Jan/2020 - Dez/2022">
+
         <label>Descrição</label>
-        <textarea maxlength="300" class="descricao"></textarea>
+        <textarea maxlength="300" class="descricao" placeholder="Responsabilidades e conquistas no cargo"></textarea>
         <hr>
       `;
       document.getElementById('experiencias').appendChild(div);
@@ -126,6 +150,7 @@
       const descricoes = document.getElementsByClassName('descricao');
 
       for (let i = 0; i < cargos.length; i++) {
+        if (!cargos[i].value) continue;
         experienciasHTML += `
           <p><strong>${cargos[i].value}</strong> - ${empresas[i].value} (${duracoes[i].value})</p>
           <p>${descricoes[i].value}</p>
@@ -149,10 +174,10 @@
       curriculoDiv.innerHTML = curriculoHTML;
       curriculoDiv.style.display = 'block';
 
-      // Aguarda renderização antes de gerar o PDF
+      // Aguarda renderização e gera o PDF corretamente
       setTimeout(() => {
         html2pdf().set({
-          margin: 10,
+          margin: 5,
           filename: 'curriculo.pdf',
           image: { type: 'jpeg', quality: 0.98 },
           html2canvas: { scale: 2, logging: false },
