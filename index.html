@@ -6,179 +6,159 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f5f5f5;
+      font-family: Arial, sans-serif;
       padding: 20px;
+      background: #f5f5f5;
     }
     .container {
       background: #fff;
       padding: 20px;
+      border-radius: 5px;
       max-width: 800px;
-      margin: 0 auto;
-      border-radius: 8px;
+      margin: auto;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    h1 {
-      text-align: center;
-      color: #007bff;
     }
     input, textarea {
       width: 100%;
       padding: 8px;
-      margin-bottom: 10px;
+      margin: 6px 0 12px;
       border: 1px solid #ccc;
       border-radius: 4px;
     }
-    .btn {
+    label {
+      font-weight: bold;
+    }
+    button {
+      padding: 10px 15px;
       background: #007bff;
       color: #fff;
-      padding: 10px 15px;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      display: inline-block;
-      margin-top: 10px;
+      margin: 5px 0;
     }
-    .btn:hover {
+    button:hover {
       background: #0056b3;
     }
     #curriculo {
       padding: 20px;
-      font-size: 12px;
       color: #000;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      white-space: pre-wrap;
     }
-    #curriculo h2 {
-      color: #000;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 4px;
-      margin-bottom: 4px;
-    }
-    #curriculo p {
-      margin: 2px 0;
+    hr {
+      margin: 15px 0;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Gerador de Currículo</h1>
-
-    <input type="text" id="nome" placeholder="Nome completo">
-    <input type="email" id="email" placeholder="Email">
-    <input type="text" id="telefone" placeholder="Telefone">
-    <input type="text" id="endereco" placeholder="Endereço">
-    <textarea id="objetivo" rows="2" placeholder="Objetivo profissional"></textarea>
-    <textarea id="resumo" rows="3" placeholder="Resumo profissional"></textarea>
-
+    <h2>Gerador de Currículo</h2>
+    <label>Nome</label>
+    <input type="text" id="nome" maxlength="100">
+    
+    <label>Email</label>
+    <input type="text" id="email" maxlength="100">
+    
+    <label>Telefone</label>
+    <input type="text" id="telefone" maxlength="30">
+    
+    <label>Endereço</label>
+    <input type="text" id="endereco" maxlength="150">
+    
+    <label>Objetivo</label>
+    <textarea id="objetivo" maxlength="200"></textarea>
+    
+    <label>Resumo Profissional</label>
+    <textarea id="resumo" maxlength="300"></textarea>
+    
     <div id="experiencias">
-      <h2>Experiência</h2>
-      <div class="exp-bloco">
-        <input type="text" placeholder="Empresa" class="exp_empresa">
-        <input type="text" placeholder="Cargo" class="exp_cargo">
-        <input type="text" placeholder="Período" class="exp_periodo">
-        <textarea placeholder="Descrição" class="exp_desc"></textarea>
-      </div>
+      <h4>Experiência Profissional</h4>
     </div>
-    <button class="btn" onclick="adicionarExperiencia()">Adicionar Experiência</button>
-
-    <h2>Formação acadêmica</h2>
-    <textarea id="formacao" rows="2" placeholder="Formação acadêmica"></textarea>
-
-    <input type="text" id="idiomas" placeholder="Idiomas">
-    <input type="text" id="hardskills" placeholder="Habilidades técnicas">
-    <input type="text" id="softskills" placeholder="Habilidades pessoais">
-
-    <button class="btn" onclick="gerarCurriculo()">Gerar PDF</button>
+    <button onclick="adicionarExperiencia()">Adicionar Experiência</button>
+    
+    <h4>Formação Acadêmica</h4>
+    <textarea id="formacao" maxlength="300"></textarea>
+    
+    <button onclick="gerarCurriculo()">Gerar Currículo em PDF</button>
   </div>
 
-  <div id="curriculo" style="display:none;">
-    <h2 id="c_nome"></h2>
-    <p><strong>Email:</strong> <span id="c_email"></span> | <strong>Telefone:</strong> <span id="c_telefone"></span></p>
-    <p><strong>Endereço:</strong> <span id="c_endereco"></span></p>
-
-    <h2>Objetivo</h2>
-    <p id="c_objetivo"></p>
-
-    <h2>Resumo profissional</h2>
-    <p id="c_resumo"></p>
-
-    <h2>Experiência</h2>
-    <div id="c_experiencia"></div>
-
-    <h2>Formação acadêmica</h2>
-    <p id="c_formacao"></p>
-
-    <h2>Idiomas</h2>
-    <p id="c_idiomas"></p>
-
-    <h2>Habilidades técnicas</h2>
-    <p id="c_hardskills"></p>
-
-    <h2>Habilidades pessoais</h2>
-    <p id="c_softskills"></p>
-  </div>
+  <div id="curriculo" style="display:none;"></div>
 
   <script>
-    let expCount = 1;
+    let experienciaCount = 0;
+
     function adicionarExperiencia() {
-      if (expCount >= 5) {
-        alert("Máximo de 5 experiências atingido");
+      if (experienciaCount >= 5) {
+        alert("Limite de 5 experiências alcançado!");
         return;
       }
+      experienciaCount++;
       const div = document.createElement('div');
-      div.className = 'exp-bloco';
       div.innerHTML = `
-        <input type="text" placeholder="Empresa" class="exp_empresa">
-        <input type="text" placeholder="Cargo" class="exp_cargo">
-        <input type="text" placeholder="Período" class="exp_periodo">
-        <textarea placeholder="Descrição" class="exp_desc"></textarea>
+        <label>Cargo</label>
+        <input type="text" maxlength="100" class="cargo">
+        <label>Empresa</label>
+        <input type="text" maxlength="100" class="empresa">
+        <label>Duração</label>
+        <input type="text" maxlength="50" class="duracao">
+        <label>Descrição</label>
+        <textarea maxlength="300" class="descricao"></textarea>
+        <hr>
       `;
       document.getElementById('experiencias').appendChild(div);
-      expCount++;
     }
 
     function gerarCurriculo() {
-      // Preencher os campos do currículo
-      document.getElementById('c_nome').innerText = document.getElementById('nome').value;
-      document.getElementById('c_email').innerText = document.getElementById('email').value;
-      document.getElementById('c_telefone').innerText = document.getElementById('telefone').value;
-      document.getElementById('c_endereco').innerText = document.getElementById('endereco').value;
-      document.getElementById('c_objetivo').innerText = document.getElementById('objetivo').value;
-      document.getElementById('c_resumo').innerText = document.getElementById('resumo').value;
-      document.getElementById('c_formacao').innerText = document.getElementById('formacao').value;
-      document.getElementById('c_idiomas').innerText = document.getElementById('idiomas').value;
-      document.getElementById('c_hardskills').innerText = document.getElementById('hardskills').value;
-      document.getElementById('c_softskills').innerText = document.getElementById('softskills').value;
+      const nome = document.getElementById('nome').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const telefone = document.getElementById('telefone').value.trim();
+      const endereco = document.getElementById('endereco').value.trim();
+      const objetivo = document.getElementById('objetivo').value.trim();
+      const resumo = document.getElementById('resumo').value.trim();
+      const formacao = document.getElementById('formacao').value.trim();
 
-      // Experiências
-      const empresas = document.getElementsByClassName('exp_empresa');
-      const cargos = document.getElementsByClassName('exp_cargo');
-      const periodos = document.getElementsByClassName('exp_periodo');
-      const descricoes = document.getElementsByClassName('exp_desc');
+      let experienciasHTML = '';
+      const cargos = document.getElementsByClassName('cargo');
+      const empresas = document.getElementsByClassName('empresa');
+      const duracoes = document.getElementsByClassName('duracao');
+      const descricoes = document.getElementsByClassName('descricao');
 
-      let html = '';
-      for (let i = 0; i < empresas.length; i++) {
-        if (empresas[i].value.trim() !== '') {
-          html += `<p><strong>${empresas[i].value}</strong> - ${cargos[i].value} (${periodos[i].value})<br>${descricoes[i].value}</p>`;
-        }
+      for (let i = 0; i < cargos.length; i++) {
+        experienciasHTML += `
+          <p><strong>${cargos[i].value}</strong> - ${empresas[i].value} (${duracoes[i].value})</p>
+          <p>${descricoes[i].value}</p>
+        `;
       }
-      document.getElementById('c_experiencia').innerHTML = html;
 
-      // Exibir currículo escondido
+      const curriculoHTML = `
+        <h2>${nome}</h2>
+        <p>${email} | ${telefone} | ${endereco}</p>
+        <h3>Objetivo</h3>
+        <p>${objetivo}</p>
+        <h3>Resumo Profissional</h3>
+        <p>${resumo}</p>
+        <h3>Experiência Profissional</h3>
+        ${experienciasHTML}
+        <h3>Formação Acadêmica</h3>
+        <p>${formacao}</p>
+      `;
+
       const curriculoDiv = document.getElementById('curriculo');
+      curriculoDiv.innerHTML = curriculoHTML;
       curriculoDiv.style.display = 'block';
 
-      // Espera renderizar e gera o PDF
+      // Aguarda renderização antes de gerar o PDF
       setTimeout(() => {
         html2pdf().set({
-          margin: [5, 5, 5, 5],
+          margin: 10,
           filename: 'curriculo.pdf',
           image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2 },
+          html2canvas: { scale: 2, logging: false },
           jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        }).from(curriculoDiv).save().then(() => {
-          curriculoDiv.style.display = 'none';
-        });
-      }, 300); // Pequeno delay para garantir renderização completa
+        }).from(curriculoDiv).save();
+      }, 500);
     }
   </script>
 </body>
