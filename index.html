@@ -9,7 +9,7 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       padding: 20px;
       background: #f0f2f5;
-      color: #000; /* Todo o texto preto */
+      color: #000;
     }
     input, textarea {
       width: 100%;
@@ -20,13 +20,14 @@
       box-sizing: border-box;
     }
     #curriculo {
-      padding: 30px;
+      padding: 20px;
       background: #fff;
       max-width: 800px;
-      margin: 30px auto;
+      margin: 0 auto;
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      color: #000; /* Garante preto no PDF */
+      color: #000;
+      font-size: 12px;
+      line-height: 1.4;
     }
     .btn {
       padding: 10px 20px;
@@ -35,38 +36,21 @@
       border: none;
       cursor: pointer;
       border-radius: 6px;
-      margin-right: 10px;
-    }
-    .btn:hover {
-      background: #0056b3;
     }
     h1 {
       text-align: center;
       color: #333;
     }
-    h2 {
-      text-align: center;
+    h2, h3 {
       color: #000;
-    }
-    h3 {
-      color: #000;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 3px;
-      margin-bottom: 8px;
+      margin: 6px 0;
     }
     p {
-      margin: 4px 0;
+      margin: 2px 0;
     }
     .linha {
       border-top: 1px solid #ccc;
-      margin: 10px 0 15px 0;
-    }
-    .experiencia-bloco {
-      border: 1px solid #007bff;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 6px;
-      background: #e9f2ff;
+      margin: 6px 0;
     }
   </style>
 </head>
@@ -96,33 +80,33 @@
     <div class="experiencia-bloco">
       <input type="text" placeholder="Empresa" class="exp_empresa" />
       <input type="text" placeholder="Cargo" class="exp_cargo" />
-      <input type="text" placeholder="Período (ex: 2020-2023)" class="exp_periodo" />
-      <textarea placeholder="Descrição das atividades" class="exp_desc"></textarea>
+      <input type="text" placeholder="Período" class="exp_periodo" />
+      <textarea placeholder="Descrição" class="exp_desc"></textarea>
     </div>
   </div>
-  <button class="btn" onclick="adicionarExperiencia()">Adicionar Experiência (+)</button>
+  <button class="btn" onclick="adicionarExperiencia()">Adicionar Experiência</button>
 
   <h3>Formação acadêmica</h3>
-  <textarea id="formacao" rows="3" placeholder="Ex: Administração - Universidade X - 2018-2022"></textarea>
+  <textarea id="formacao" rows="2"></textarea>
 
   <label>Idiomas:</label>
-  <input type="text" id="idiomas" placeholder="Ex: Português (nativo), Inglês (avançado)" />
+  <input type="text" id="idiomas" />
 
-  <label>Habilidades técnicas (hard skills):</label>
-  <input type="text" id="hardskills" placeholder="Ex: Excel avançado, Python, Photoshop" />
+  <label>Habilidades técnicas:</label>
+  <input type="text" id="hardskills" />
 
-  <label>Habilidades pessoais (soft skills):</label>
-  <input type="text" id="softskills" placeholder="Ex: Comunicação, Liderança, Trabalho em equipe" />
+  <label>Habilidades pessoais:</label>
+  <input type="text" id="softskills" />
 
   <button class="btn" onclick="gerarCurriculo()">Gerar Currículo (PDF)</button>
 
-  <div id="curriculo" style="display:none;">
+  <div id="curriculo" style="display: none;">
     <h2 id="c_nome"></h2>
-    <p style="text-align:center;">
+    <p style="text-align: center;">
       <strong>Email:</strong> <span id="c_email"></span> |
       <strong>Telefone:</strong> <span id="c_telefone"></span>
     </p>
-    <p style="text-align:center;"><strong>Endereço:</strong> <span id="c_endereco"></span></p>
+    <p style="text-align: center;"><strong>Endereço:</strong> <span id="c_endereco"></span></p>
     <div class="linha"></div>
 
     <h3>Objetivo</h3>
@@ -151,7 +135,7 @@
     let expCount = 1;
     function adicionarExperiencia() {
       if (expCount >= 5) {
-        alert("Limite de 5 experiências atingido.");
+        alert("Máximo de 5 experiências atingido");
         return;
       }
       const div = document.createElement('div');
@@ -159,15 +143,14 @@
       div.innerHTML = `
         <input type="text" placeholder="Empresa" class="exp_empresa" />
         <input type="text" placeholder="Cargo" class="exp_cargo" />
-        <input type="text" placeholder="Período (ex: 2020-2023)" class="exp_periodo" />
-        <textarea placeholder="Descrição das atividades" class="exp_desc"></textarea>
+        <input type="text" placeholder="Período" class="exp_periodo" />
+        <textarea placeholder="Descrição" class="exp_desc"></textarea>
       `;
       document.getElementById('experiencias').appendChild(div);
       expCount++;
     }
 
     function gerarCurriculo() {
-      // Preencher dados
       document.getElementById('c_nome').innerText = document.getElementById('nome').value;
       document.getElementById('c_email').innerText = document.getElementById('email').value;
       document.getElementById('c_telefone').innerText = document.getElementById('telefone').value;
@@ -179,32 +162,36 @@
       document.getElementById('c_hardskills').innerText = document.getElementById('hardskills').value;
       document.getElementById('c_softskills').innerText = document.getElementById('softskills').value;
 
-      // Preencher experiências
-      const empresas = document.getElementsByClassName('exp_empresa');
-      const cargos = document.getElementsByClassName('exp_cargo');
-      const periodos = document.getElementsByClassName('exp_periodo');
-      const descricoes = document.getElementsByClassName('exp_desc');
-      let expHTML = '';
+      let empresas = document.getElementsByClassName('exp_empresa');
+      let cargos = document.getElementsByClassName('exp_cargo');
+      let periodos = document.getElementsByClassName('exp_periodo');
+      let descricoes = document.getElementsByClassName('exp_desc');
+
+      let html = '';
       for (let i = 0; i < empresas.length; i++) {
         if (empresas[i].value.trim() !== '') {
-          expHTML += `<p><strong>${empresas[i].value}</strong> - ${cargos[i].value} (${periodos[i].value})<br>${descricoes[i].value}</p>`;
+          html += `<p><strong>${empresas[i].value}</strong> - ${cargos[i].value} (${periodos[i].value})<br>${descricoes[i].value}</p>`;
         }
       }
-      document.getElementById('c_experiencia').innerHTML = expHTML;
+      document.getElementById('c_experiencia').innerHTML = html;
 
-      // Mostrar currículo temporariamente
-      const curriculoDiv = document.getElementById('curriculo');
-      curriculoDiv.style.display = 'block';
+      // Mostrar currículo
+      const curriculo = document.getElementById('curriculo');
+      curriculo.style.display = 'block';
 
-      // Gerar PDF
-      html2pdf().set({
-        margin: 10,
-        filename: 'curriculo.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      }).from(curriculoDiv).save().then(() => {
-        curriculoDiv.style.display = 'none'; // Ocultar novamente
+      // Espera renderizar e gera o PDF
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          html2pdf().set({
+            margin: 5,
+            filename: 'curriculo.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+          }).from(curriculo).save().then(() => {
+            curriculo.style.display = 'none';
+          });
+        }, 100);
       });
     }
   </script>
