@@ -1,192 +1,156 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <title>Gerador de Currículo</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
-      background: #f0f0f0;
+      background: #f2f2f2;
+      padding: 30px;
     }
-
     .container {
-      background: #fff;
-      padding: 20px;
-      border-radius: 6px;
+      background: white;
       max-width: 800px;
       margin: auto;
+      padding: 20px;
+      border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
     input, textarea {
       width: 100%;
+      margin-bottom: 15px;
       padding: 10px;
-      margin: 6px 0 12px;
       border: 1px solid #ccc;
       border-radius: 4px;
-      font-size: 14px;
       resize: vertical;
+      font-size: 14px;
       word-wrap: break-word;
-      overflow-wrap: break-word;
     }
-
-    label {
-      font-weight: bold;
+    textarea {
+      min-height: 80px;
     }
-
-    button {
-      padding: 10px 15px;
-      background: #007bff;
+    .btn {
+      display: block;
+      background-color: #007bff;
       color: white;
-      border: none;
+      padding: 10px 15px;
+      text-align: center;
+      text-decoration: none;
       border-radius: 4px;
-      cursor: pointer;
-      margin: 8px 0;
+      margin: auto;
+      width: 200px;
+      font-size: 16px;
     }
-
-    button:hover {
-      background: #0056b3;
-    }
-
     #curriculo {
-      padding: 10px;
-      max-width: 800px;
-      color: #000;
-      font-size: 12px;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      white-space: pre-wrap;
-      line-height: 1.6;
+      padding: 20px;
+      color: black;
     }
-
-    hr {
-      margin: 12px 0;
-      border: 0;
-      border-top: 1px solid #ccc;
+    .section {
+      margin-bottom: 15px;
+    }
+    .section h3 {
+      margin-bottom: 5px;
+      border-bottom: 1px solid #ccc;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Gerador de Currículo</h2>
+    <h1>Gerador de Currículo</h1>
+    <form id="formulario">
+      <input type="text" id="nome" placeholder="Nome completo" required maxlength="100">
+      <input type="email" id="email" placeholder="Email" required maxlength="100">
+      <input type="text" id="telefone" placeholder="Telefone" required maxlength="30">
+      <input type="text" id="endereco" placeholder="Endereço" required maxlength="100">
+      <textarea id="objetivo" placeholder="Objetivo" required maxlength="400"></textarea>
+      <textarea id="resumo" placeholder="Resumo Profissional" required maxlength="400"></textarea>
 
-    <label>Nome</label>
-    <input type="text" id="nome" maxlength="100" placeholder="Seu nome completo">
+      <div id="experiencias">
+        <textarea placeholder="Experiência 1" maxlength="400"></textarea>
+      </div>
+      <button type="button" onclick="addExperiencia()">Adicionar Experiência (+ até 5)</button>
 
-    <label>Email</label>
-    <input type="email" id="email" maxlength="100" placeholder="email@exemplo.com">
+      <h3>Formação Acadêmica</h3>
+      <textarea id="formacao" placeholder="Formação Acadêmica" required maxlength="300"></textarea>
 
-    <label>Telefone</label>
-    <input type="text" id="telefone" maxlength="30" placeholder="(DDD) 99999-9999">
-
-    <label>Endereço</label>
-    <input type="text" id="endereco" maxlength="150" placeholder="Rua, número, bairro, cidade - UF">
-
-    <label>Objetivo</label>
-    <textarea id="objetivo" maxlength="200" placeholder="Descreva seu objetivo profissional"></textarea>
-
-    <label>Resumo Profissional</label>
-    <textarea id="resumo" maxlength="300" placeholder="Fale brevemente sobre sua trajetória, pontos fortes e áreas de interesse"></textarea>
-
-    <div id="experiencias">
-      <h4>Experiência Profissional</h4>
-    </div>
-    <button onclick="adicionarExperiencia()">Adicionar Experiência</button>
-
-    <h4 style="margin-top: 20px;">Formação Acadêmica</h4>
-    <textarea id="formacao" maxlength="300" placeholder="Ex: Ensino Superior em Administração - Universidade X - 2020"></textarea>
-
-    <h4 style="margin-top: 20px;">Conhecimentos</h4>
-    <textarea id="conhecimentos" maxlength="300" placeholder="Ex: Pacote Office, Excel Avançado, Inglês Intermediário, Comunicação, Trabalho em Equipe"></textarea>
-
-    <button onclick="gerarCurriculo()">Gerar Currículo em PDF</button>
+      <textarea id="conhecimentos" placeholder="Conhecimentos e Habilidades" required maxlength="300"></textarea>
+      <br>
+      <button class="btn" type="submit">Gerar Currículo em PDF</button>
+    </form>
   </div>
 
   <div id="curriculo" style="display:none;"></div>
 
   <script>
-    let experienciaCount = 0;
+    let maxExp = 5;
 
-    function adicionarExperiencia() {
-      if (experienciaCount >= 5) {
-        alert("Limite de 5 experiências alcançado!");
-        return;
+    function addExperiencia() {
+      const div = document.getElementById("experiencias");
+      const total = div.querySelectorAll("textarea").length;
+      if (total < maxExp) {
+        const textarea = document.createElement("textarea");
+        textarea.placeholder = "Experiência " + (total + 1);
+        textarea.maxLength = 400;
+        div.appendChild(textarea);
+      } else {
+        alert("Máximo de 5 experiências.");
       }
-      experienciaCount++;
-      const div = document.createElement('div');
-      div.innerHTML = `
-        <label>Cargo</label>
-        <input type="text" maxlength="100" class="cargo" placeholder="Ex: Analista de Marketing">
-
-        <label>Empresa</label>
-        <input type="text" maxlength="100" class="empresa" placeholder="Nome da empresa">
-
-        <label>Duração</label>
-        <input type="text" maxlength="50" class="duracao" placeholder="Ex: Jan/2020 - Dez/2022">
-
-        <label>Descrição</label>
-        <textarea maxlength="300" class="descricao" placeholder="Responsabilidades e conquistas no cargo"></textarea>
-        <hr>
-      `;
-      document.getElementById('experiencias').appendChild(div);
     }
 
-    function gerarCurriculo() {
-      const nome = document.getElementById('nome').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const telefone = document.getElementById('telefone').value.trim();
-      const endereco = document.getElementById('endereco').value.trim();
-      const objetivo = document.getElementById('objetivo').value.trim();
-      const resumo = document.getElementById('resumo').value.trim();
-      const formacao = document.getElementById('formacao').value.trim();
-      const conhecimentos = document.getElementById('conhecimentos').value.trim();
+    document.getElementById("formulario").addEventListener("submit", function(e) {
+      e.preventDefault();
 
-      let experienciasHTML = '';
-      const cargos = document.getElementsByClassName('cargo');
-      const empresas = document.getElementsByClassName('empresa');
-      const duracoes = document.getElementsByClassName('duracao');
-      const descricoes = document.getElementsByClassName('descricao');
+      const nome = document.getElementById("nome").value;
+      const email = document.getElementById("email").value;
+      const telefone = document.getElementById("telefone").value;
+      const endereco = document.getElementById("endereco").value;
+      const objetivo = document.getElementById("objetivo").value;
+      const resumo = document.getElementById("resumo").value;
+      const formacao = document.getElementById("formacao").value;
+      const conhecimentos = document.getElementById("conhecimentos").value;
 
-      for (let i = 0; i < cargos.length; i++) {
-        if (!cargos[i].value) continue;
-        experienciasHTML += `
-          <p><strong>${cargos[i].value}</strong> - ${empresas[i].value} (${duracoes[i].value})</p>
-          <p>${descricoes[i].value}</p>
-        `;
-      }
+      let experiencias = "";
+      document.querySelectorAll("#experiencias textarea").forEach((exp, index) => {
+        if (exp.value.trim() !== "") {
+          experiencias += `<li>${exp.value}</li>`;
+        }
+      });
 
-      const curriculoHTML = `
-        <h2>${nome}</h2>
-        <p>${email} | ${telefone} | ${endereco}</p>
-        <h3>Objetivo</h3>
-        <p>${objetivo}</p>
-        <h3>Resumo Profissional</h3>
-        <p>${resumo}</p>
-        <h3>Experiência Profissional</h3>
-        ${experienciasHTML}
-        <h3>Formação Acadêmica</h3>
-        <p>${formacao}</p>
-        <h3>Conhecimentos</h3>
-        <p>${conhecimentos}</p>
+      const html = `
+        <div style="font-family: Arial; font-size: 12px; max-width: 800px;">
+          <h2 style="text-align: center;">${nome}</h2>
+          <p style="text-align: center;">${email} | ${telefone} | ${endereco}</p>
+
+          <div class="section"><h3>Objetivo</h3><p>${objetivo}</p></div>
+          <div class="section"><h3>Resumo Profissional</h3><p>${resumo}</p></div>
+          <div class="section"><h3>Experiência Profissional</h3><ul>${experiencias}</ul></div>
+          <div class="section"><h3>Formação Acadêmica</h3><p>${formacao}</p></div>
+          <div class="section"><h3>Conhecimentos</h3><p>${conhecimentos}</p></div>
+        </div>
       `;
 
-      const curriculoDiv = document.getElementById('curriculo');
-      curriculoDiv.innerHTML = curriculoHTML;
-      curriculoDiv.style.display = 'block';
+      const curriculoDiv = document.getElementById("curriculo");
+      curriculoDiv.innerHTML = html;
+      curriculoDiv.style.display = "block";
 
-      // Aguarda o conteúdo renderizar antes de gerar o PDF
+      // Aguardar para garantir que o conteúdo foi renderizado antes do PDF
       setTimeout(() => {
-        html2pdf().set({
-          margin: [5, 5, 5, 5],
+        const opt = {
+          margin: 0.3,
           filename: 'curriculo.pdf',
           image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2, logging: false, useCORS: true },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        }).from(curriculoDiv).save();
-      }, 600);
-    }
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(curriculoDiv).save();
+      }, 300);
+    });
   </script>
 </body>
 </html>
