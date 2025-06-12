@@ -8,7 +8,7 @@
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
-      background: #f2f2f2;
+      background: #f0f0f0;
     }
 
     .container {
@@ -28,13 +28,8 @@
       border-radius: 4px;
       font-size: 14px;
       resize: vertical;
-      overflow-y: auto;
       word-wrap: break-word;
       overflow-wrap: break-word;
-    }
-
-    textarea {
-      min-height: 60px;
     }
 
     label {
@@ -58,8 +53,8 @@
     #curriculo {
       padding: 10px;
       max-width: 800px;
-      font-size: 12px;
       color: #000;
+      font-size: 12px;
       word-wrap: break-word;
       overflow-wrap: break-word;
       white-space: pre-wrap;
@@ -76,6 +71,7 @@
 <body>
   <div class="container">
     <h2>Gerador de Currículo</h2>
+
     <label>Nome</label>
     <input type="text" id="nome" maxlength="100" placeholder="Seu nome completo">
 
@@ -101,6 +97,9 @@
 
     <h4 style="margin-top: 20px;">Formação Acadêmica</h4>
     <textarea id="formacao" maxlength="300" placeholder="Ex: Ensino Superior em Administração - Universidade X - 2020"></textarea>
+
+    <h4 style="margin-top: 20px;">Conhecimentos</h4>
+    <textarea id="conhecimentos" maxlength="300" placeholder="Ex: Pacote Office, Excel Avançado, Inglês Intermediário, Comunicação, Trabalho em Equipe"></textarea>
 
     <button onclick="gerarCurriculo()">Gerar Currículo em PDF</button>
   </div>
@@ -142,6 +141,7 @@
       const objetivo = document.getElementById('objetivo').value.trim();
       const resumo = document.getElementById('resumo').value.trim();
       const formacao = document.getElementById('formacao').value.trim();
+      const conhecimentos = document.getElementById('conhecimentos').value.trim();
 
       let experienciasHTML = '';
       const cargos = document.getElementsByClassName('cargo');
@@ -168,22 +168,24 @@
         ${experienciasHTML}
         <h3>Formação Acadêmica</h3>
         <p>${formacao}</p>
+        <h3>Conhecimentos</h3>
+        <p>${conhecimentos}</p>
       `;
 
       const curriculoDiv = document.getElementById('curriculo');
       curriculoDiv.innerHTML = curriculoHTML;
       curriculoDiv.style.display = 'block';
 
-      // Aguarda renderização e gera o PDF corretamente
+      // Aguarda o conteúdo renderizar antes de gerar o PDF
       setTimeout(() => {
         html2pdf().set({
-          margin: 5,
+          margin: [5, 5, 5, 5],
           filename: 'curriculo.pdf',
           image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2, logging: false },
+          html2canvas: { scale: 2, logging: false, useCORS: true },
           jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         }).from(curriculoDiv).save();
-      }, 500);
+      }, 600);
     }
   </script>
 </body>
