@@ -5,13 +5,63 @@
   <title>Gerador de Currículo Profissional</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f2f2f2; }
-    input, textarea { width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-    #curriculo { padding: 20px; background: #fff; max-width: 800px; margin: 20px auto; }
-    .btn { padding: 10px 20px; background: #4CAF50; color: #fff; border: none; cursor: pointer; border-radius: 4px; }
-    h1, h2, h3 { color: #333; margin-bottom: 5px; }
-    .linha { border-top: 1px solid #ccc; margin: 10px 0; }
-    .experiencia-bloco { border: 1px dashed #999; padding: 10px; margin-bottom: 10px; border-radius: 4px; background: #fafafa; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      background: #f0f2f5;
+    }
+    input, textarea {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+    #curriculo {
+      padding: 30px;
+      background: #fff;
+      max-width: 800px;
+      margin: 30px auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .btn {
+      padding: 10px 20px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      border-radius: 6px;
+      margin-right: 10px;
+    }
+    .btn:hover {
+      background: #0056b3;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    h2, h3 {
+      color: #007bff;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 3px;
+      margin-bottom: 8px;
+    }
+    p {
+      margin: 4px 0;
+    }
+    .linha {
+      border-top: 1px solid #ccc;
+      margin: 10px 0 15px 0;
+    }
+    .experiencia-bloco {
+      border: 1px solid #007bff;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      background: #e9f2ff;
+    }
   </style>
 </head>
 <body>
@@ -61,9 +111,12 @@
   <button class="btn" onclick="gerarCurriculo()">Gerar Currículo</button>
 
   <div id="curriculo" style="display:none;">
-    <h2 id="c_nome"></h2>
-    <p><strong>Email:</strong> <span id="c_email"></span> | <strong>Telefone:</strong> <span id="c_telefone"></span></p>
-    <p><strong>Endereço:</strong> <span id="c_endereco"></span></p>
+    <h2 id="c_nome" style="text-align:center;"></h2>
+    <p style="text-align:center;">
+      <strong>Email:</strong> <span id="c_email"></span> |
+      <strong>Telefone:</strong> <span id="c_telefone"></span>
+    </p>
+    <p style="text-align:center;"><strong>Endereço:</strong> <span id="c_endereco"></span></p>
     <div class="linha"></div>
 
     <h3>Objetivo</h3>
@@ -119,7 +172,6 @@
       document.getElementById('c_hardskills').innerText = document.getElementById('hardskills').value;
       document.getElementById('c_softskills').innerText = document.getElementById('softskills').value;
 
-      // Processa experiências
       const empresas = document.getElementsByClassName('exp_empresa');
       const cargos = document.getElementsByClassName('exp_cargo');
       const periodos = document.getElementsByClassName('exp_periodo');
